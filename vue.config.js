@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 const dayjs = require('dayjs');
 const TerserPlugin = require('terser-webpack-plugin');
+const defineOptions = require('unplugin-vue-define-options/webpack');
 
 const resolve = (dir) => path.join(__dirname, dir); // 路径
 const pkg = require('./package.json');
@@ -167,7 +168,9 @@ module.exports = defineConfig({
       // 打包速度分析
       new SpeedMeasurePlugin(),
       // use defineOptions https://github.com/sxzz/unplugin-vue-define-options
-      require('unplugin-vue-define-options/webpack')(),
+      defineOptions({
+        include: [/\.vue$/, /\.vue\?vue/],
+      }),
     );
 
     if (IS_PROD) {
@@ -214,7 +217,7 @@ module.exports = defineConfig({
       '^/api': {
         // target: process.env.VUE_APP_API_URL,
         target: 'https://nest-api.buqiyuan.site/api/',
-        // target: 'http://localhost:7001 ',
+        // target: 'http://127.0.0.1:7001',
         changeOrigin: true,
         logLevel: 'debug',
         pathRewrite: {
@@ -229,7 +232,7 @@ module.exports = defineConfig({
       },
       '^/ws-api': {
         target: 'wss://nest-api.buqiyuan.site',
-        // target: 'http://localhost:7002',
+        // target: 'http://127.0.0.1:7002',
         changeOrigin: true, //是否允许跨域
         wss: true,
         logLevel: 'debug',
